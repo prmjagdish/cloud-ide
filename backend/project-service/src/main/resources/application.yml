@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: project-service
+
+  datasource:
+    url: jdbc:postgresql://dpg-d2li9njuibrs73f9il7g-a.singapore-postgres.render.com/project_service
+    username: project_service_user
+    password: 9r8A1NciBpMKMVJd9ybBGwSotJ16mXTs
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 10000
