@@ -1,0 +1,17 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: file-service
+  datasource:
+    url: jdbc:postgresql://dpg-d2li29juibrs73f99mu0-a.oregon-postgres.render.com/filedb_0gkn
+    username: filedb_0gkn_user
+    password: 4vE2QLPpiIvyK6XtJ39nOeMO1zo7tkOK
+
+minio:
+  endpoint: http://minio:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucket: user-workspaces
+
