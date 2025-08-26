@@ -8,7 +8,7 @@ import java.time.Instant;
 @Entity
 @Getter
 @Setter
-@Table(name="file_matadata")
+@Table(name="file_metadata")
 public final class FileMetadata {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
