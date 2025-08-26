@@ -33,6 +33,9 @@ public class Project {
     @Column(nullable = false)
     private Language language; // JAVA, KOTLIN, etc.
 
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status;
+
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 

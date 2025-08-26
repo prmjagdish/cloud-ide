@@ -41,19 +41,19 @@ public class ProjectServiceImpl implements ProjectService {
         project.setOwnerId(ownerId);
         Project savedProject = projectRepository.save(project);
 
-        try {
-            FileBootstrapRequest fileRequest = FileBootstrapRequest.builder()
-                    .projectId(savedProject.getId())
-                    .buildTool(request.getBuildTool().name())
-                    .language(request.getLanguage().name())
-                    .build();
-
-            fileServiceClient.bootstrapProject(fileRequest);
-        } catch (Exception e) {
-            projectRepository.delete(savedProject);
-            // rollback if File Service fails
-            throw new RuntimeException("FileService bootstrap failed, rolling back project", e);
-        }
+//        try {
+//            FileBootstrapRequest fileRequest = FileBootstrapRequest.builder()
+//                    .projectId(savedProject.getId())
+//                    .buildTool(request.getBuildTool().name())
+//                    .language(request.getLanguage().name())
+//                    .build();
+//
+//            fileServiceClient.bootstrapProject(fileRequest);
+//        } catch (Exception e) {
+//            projectRepository.delete(savedProject);
+//            // rollback if File Service fails
+//            throw new RuntimeException("FileService bootstrap failed, rolling back project", e);
+//        }
         return savedProject;
     }
 
@@ -63,34 +63,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project updateProject(UUID projectId, UUID userId, ProjectRequest request) {
+    @Transactional
+    public Project renameProject(UUID projectId, UUID userId, String newName) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + projectId));
 
         if (!project.getOwnerId().equals(userId)) {
-            throw new UnauthorizedException("You are not allowed to update this project");
+            throw new UnauthorizedException("You are not allowed to rename this project");
         }
 
-        // Ensure at least one field is provided
-        if (request.getName() == null && request.getBuildTool() == null && request.getLanguage() == null) {
-            throw new BadRequestException("At least one field must be provided for update");
-        }
-
-        // Validate name (non-empty)
-        if (request.getName() != null && request.getName().isBlank()) {
-            throw new BadRequestException("Project name cannot be blank");
-        }
-
-        // Apply updates safely
-        if (request.getName() != null) project.setName(request.getName());
-        if (request.getBuildTool() != null) project.setBuildTool(request.getBuildTool());
-        if (request.getLanguage() != null) project.setLanguage(request.getLanguage());
-
+        project.setName(newName);
         project.setUpdatedAt(LocalDateTime.now());
 
         return projectRepository.save(project);
-
     }
+
+
 
     @Override
     public Project getProject(UUID projectId, UUID ownerId) {
@@ -120,13 +108,13 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.delete(project);
 
         // Step 2: try deleting files, but don't rollback DB if it fails
-        try {
-            fileServiceClient.deleteProjectFiles(projectId);
-        } catch (Exception e) {
-            // Log error and maybe publish an event for retry
-            log.error("Failed to delete files for project {}", projectId, e);
-            // optional: throw custom exception if you want client to know partial failure
-        }
+//        try {
+//            fileServiceClient.deleteProjectFiles(projectId);
+//        } catch (Exception e) {
+//            // Log error and maybe publish an event for retry
+//            log.error("Failed to delete files for project {}", projectId, e);
+//            // optional: throw custom exception if you want client to know partial failure
+//        }
     }
 
 }

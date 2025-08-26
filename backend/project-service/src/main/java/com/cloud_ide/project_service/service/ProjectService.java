@@ -10,7 +10,7 @@ public interface ProjectService {
     Project createProject(ProjectRequest request, UUID ownerId);
     Project getProject(UUID projectId, UUID ownerId);
     List<Project> getProjectsByUser(UUID userId);
-    Project updateProject(UUID projectId, UUID userId, ProjectRequest request);
+    Project renameProject(UUID projectId, UUID userId, String request);
 
     void deleteProject(UUID projectId, UUID ownerId);
 }

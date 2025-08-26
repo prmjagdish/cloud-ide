@@ -9,9 +9,9 @@ import java.util.UUID;
 @FeignClient(name = "file-service", fallback = FileServiceFallback.class)
 public interface FileServiceClient {
 
-    @PostMapping("/files/bootstrap")
-    void bootstrapProject(@RequestBody FileBootstrapRequest request);
-
-    @DeleteMapping("/files/{projectId}")
-    void deleteProjectFiles(@PathVariable UUID projectId);
+//    @PostMapping("/files/bootstrap")
+//    void bootstrapProject(@RequestBody FileBootstrapRequest request);
+//
+//    @DeleteMapping("/files/{projectId}")
+//    void deleteProjectFiles(@PathVariable UUID projectId);
 }

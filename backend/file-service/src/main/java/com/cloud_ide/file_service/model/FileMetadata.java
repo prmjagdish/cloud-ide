@@ -1,10 +1,12 @@
 package com.cloud_ide.file_service.model;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
 
+@Data
 @Entity
 @Getter
 @Setter

@@ -5,6 +5,7 @@ import com.cloud_ide.project_service.model.Language;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,6 +17,7 @@ public class ProjectResponse {
     private String name;
     private BuildTool buildTool;
     private Language language;
+    private List<String> files;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

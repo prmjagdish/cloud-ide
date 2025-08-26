@@ -10,15 +10,15 @@ import java.util.UUID;
 //@Slf4j
 public class FileServiceFallback implements FileServiceClient {
 
-    @Override
-    public void bootstrapProject(FileBootstrapRequest request) {
-//        log.error("File Service unavailable for bootstrapProject: {} ", request);
-        throw new RuntimeException("File Service is unavailable. Try again later.");
-    }
-
-    @Override
-    public void deleteProjectFiles(UUID projectId) {
-//        log.error("File Service unavailable for deleteProjectFiles: {} ", projectId);
-        // Optionally ignore to allow project deletion in DB
-    }
+//    @Override
+//    public void bootstrapProject(FileBootstrapRequest request) {
+////        log.error("File Service unavailable for bootstrapProject: {} ", request);
+//        throw new RuntimeException("File Service is unavailable. Try again later.");
+//    }
+//
+//    @Override
+//    public void deleteProjectFiles(UUID projectId) {
+////        log.error("File Service unavailable for deleteProjectFiles: {} ", projectId);
+//        // Optionally ignore to allow project deletion in DB
+//    }
 }
