@@ -2,9 +2,9 @@ package com.cloud_ide.project_service.controller;
 
 import com.cloud_ide.project_service.dto.*;
 import com.cloud_ide.project_service.exception.BadRequestException;
+import com.cloud_ide.project_service.messaging.publisher.ProjectEventPublisher;
 import com.cloud_ide.project_service.model.Project;
-import com.cloud_ide.project_service.service.ProjectService;
-import com.cloud_ide.project_service.service.TaskService;
+import com.cloud_ide.project_service.model.ProjectStatus;
 import com.cloud_ide.project_service.service.impl.ProjectServiceImpl;
 import com.cloud_ide.project_service.util.MapperUtil;
 import org.springframework.http.HttpStatus;
@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 public class ProjectController {
 
     private final ProjectServiceImpl projectService;
-    private final TaskService taskService;
+    private final ProjectEventPublisher publisher;
     private final MapperUtil mapperUtil;
 
-    public ProjectController(ProjectServiceImpl projectService, TaskService taskService, MapperUtil mapperUtil) {
+    public ProjectController(ProjectServiceImpl projectService, ProjectEventPublisher publisher, MapperUtil mapperUtil) {
         this.projectService = projectService;
-        this.taskService = taskService;
+        this.publisher = publisher;
         this.mapperUtil = mapperUtil;
     }
 
@@ -38,7 +38,8 @@ public class ProjectController {
         // 2️⃣ Send async message with projectId
         ProjectBootstrapRequest bootstrapRequest =
                 new ProjectBootstrapRequest(project.getId(), project.getName(),project.getBuildTool().toString(),project.getLanguage().toString(),project.getOwnerId());
-        taskService.bootstrapProject(bootstrapRequest);
+        publisher.bootstrapProject(bootstrapRequest);
+        project.setStatus(ProjectStatus.in_progress);
         ProjectResponse projectResponse = mapperUtil.toProjectResponse(project);
         return projectResponse;
     }
@@ -72,7 +73,7 @@ public class ProjectController {
         Project project = projectService.renameProject(projectId, userId, newName);
 
         // 2️⃣ Send async task/event directly
-        taskService.renameProject(new ProjectRenameRequest(projectId, newName,userId));
+//        publisher.renameProject(new ProjectRenameRequest(projectId, newName,userId));
 
         return mapperUtil.toProjectResponse(project);
     }
@@ -88,7 +89,7 @@ public class ProjectController {
         projectService.deleteProject(id, userId);
 
         // 2️⃣ Send async delete event to File Service
-        taskService.deleteProject(new ProjectDeleteRequest(id, userId));
+        publisher.deleteProject(new ProjectDeleteRequest(id, userId));
     }
 
 }

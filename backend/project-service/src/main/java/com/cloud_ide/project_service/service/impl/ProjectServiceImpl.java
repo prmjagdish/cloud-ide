@@ -1,9 +1,8 @@
 package com.cloud_ide.project_service.service.impl;
 
 import com.cloud_ide.project_service.client.FileServiceClient;
-import com.cloud_ide.project_service.dto.FileBootstrapRequest;
+import com.cloud_ide.project_service.dto.ProjectReadyEvent;
 import com.cloud_ide.project_service.dto.ProjectRequest;
-import com.cloud_ide.project_service.exception.BadRequestException;
 import com.cloud_ide.project_service.exception.ProjectNotFoundException;
 import com.cloud_ide.project_service.exception.ResourceNotFoundException;
 import com.cloud_ide.project_service.exception.UnauthorizedException;
@@ -117,5 +116,11 @@ public class ProjectServiceImpl implements ProjectService {
 //        }
     }
 
+    @Override
+    public void updateStatus(ProjectReadyEvent projectReadyEvent) {
+        Project project = projectRepository.findById(projectReadyEvent.getProjectId())
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + projectReadyEvent.getProjectId()));
+        project.setStatus(projectReadyEvent.getStatus());
+    }
 }
 
