@@ -4,6 +4,7 @@ import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,13 +16,15 @@ public class RabbitMQConfig {
 
     // --- Queues ---
     public static final String PROJECT_BOOTSTRAP_QUEUE = "cloudide.project.bootstrap.queue";
-    public static final String PROJECT_RENAME_QUEUE = "cloudide.project.rename.queue";
     public static final String PROJECT_DELETE_QUEUE = "cloudide.project.delete.queue";
+    public static final String PROJECT_READY_QUEUE = "cloudide.project.ready.queue";
+
 
     // --- Routing Keys ---
     public static final String PROJECT_BOOTSTRAP_KEY = "project.bootstrap";
-    public static final String PROJECT_RENAME_KEY = "project.rename";
     public static final String PROJECT_DELETE_KEY = "project.delete";
+    public static final String PROJECT_READY_KEY = "project.ready";
+
 
     // ========== Exchange Bean ==========
     @Bean
@@ -36,36 +39,43 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue projectRenameQueue() {
-        return new Queue(RabbitMQConfig.PROJECT_RENAME_QUEUE, true, false, false);
-    }
-
-    @Bean
     public Queue projectDeleteQueue() {
         return new Queue(RabbitMQConfig.PROJECT_DELETE_QUEUE, true, false, false);
     }
 
+    @Bean
+    public Queue projectReadyQueue() {
+        return new Queue(PROJECT_READY_QUEUE, true, false, false);
+    }
+
     // ========== Binding Beans ==========
     @Bean
-    public Binding bindProjectBootstrapQueue(Queue projectBootstrapQueue, TopicExchange projectExchange) {
+    public Binding bindProjectBootstrapQueue(
+            @Qualifier("projectBootstrapQueue") Queue projectBootstrapQueue,
+            TopicExchange projectExchange) {
         return BindingBuilder.bind(projectBootstrapQueue)
                 .to(projectExchange)
                 .with(PROJECT_BOOTSTRAP_KEY);
     }
 
     @Bean
-    public Binding bindProjectRenameQueue(Queue projectRenameQueue, TopicExchange projectExchange) {
-        return BindingBuilder.bind(projectRenameQueue)
-                .to(projectExchange)
-                .with(PROJECT_RENAME_KEY);
-    }
-
-    @Bean
-    public Binding bindProjectDeleteQueue(Queue projectDeleteQueue, TopicExchange projectExchange) {
+    public Binding bindProjectDeleteQueue(
+            @Qualifier("projectDeleteQueue") Queue projectDeleteQueue,
+            TopicExchange projectExchange) {
         return BindingBuilder.bind(projectDeleteQueue)
                 .to(projectExchange)
                 .with(PROJECT_DELETE_KEY);
     }
+
+    @Bean
+    public Binding bindProjectReadyQueue(
+            @Qualifier("projectReadyQueue") Queue projectReadyQueue,
+            TopicExchange projectExchange) {
+        return BindingBuilder.bind(projectReadyQueue)
+                .to(projectExchange)
+                .with(PROJECT_READY_KEY);
+    }
+
 
     // ========== JSON Converter ==========
     @Bean
