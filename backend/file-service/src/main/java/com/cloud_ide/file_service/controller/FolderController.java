@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class FolderController {
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createFolder(
-            @PathVariable Long projectId,
+            @PathVariable UUID projectId,
             @RequestParam String folderPath) {
         folderService.createFolder(projectId, folderPath);
         return ResponseEntity.ok(
@@ -29,7 +30,7 @@ public class FolderController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteFolder(
-            @PathVariable Long projectId,
+            @PathVariable UUID projectId,
             @RequestParam String folderPath) {
         folderService.deleteFolder(projectId, folderPath);
         return ResponseEntity.ok(
@@ -39,7 +40,7 @@ public class FolderController {
 
     @PutMapping("/rename")
     public ResponseEntity<ApiResponse> renameFolder(
-            @PathVariable Long projectId,
+            @PathVariable UUID projectId,
             @RequestParam String oldFolderPath,
             @RequestParam String newFolderPath) {
         folderService.renameFolder(projectId, oldFolderPath, newFolderPath);
@@ -50,7 +51,7 @@ public class FolderController {
 
     @GetMapping("/list")
     public ResponseEntity<?> listFolderContent(
-            @PathVariable Long projectId,
+            @PathVariable UUID projectId,
             @RequestParam String folderPath) {
         List<String> contents = folderService.listFolderContent(projectId, folderPath);
         return ResponseEntity.ok(contents);

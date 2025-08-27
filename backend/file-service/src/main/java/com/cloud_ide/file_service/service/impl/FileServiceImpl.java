@@ -11,6 +11,8 @@ import io.minio.errors.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +38,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @Transactional
-    public void createFile(Long projectId, String path, InputStream content, long size, String contentType) {
+    public void createFile(UUID projectId, String path, InputStream content, long size, String contentType) {
         try {
             if (projectId == null || path == null || path.isBlank()) {
                 throw new FileServiceException("ProjectId and path must not be null/empty");
@@ -76,7 +79,7 @@ public class FileServiceImpl implements FileService {
 
 
     @Override
-    public void updateFile(Long projectId, String path, InputStream content, long size, String contentType) {
+    public void updateFile(UUID projectId, String path, InputStream content, long size, String contentType) {
         try {
             String objectName = projectId + "/" + path;
 
@@ -112,7 +115,8 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void deleteFile(Long projectId, String path) {
+    @Transactional
+    public void deleteFile(UUID projectId, String path) {
         try {
             String objectName = projectId + "/" + path;
 
@@ -137,7 +141,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void renameFile(Long projectId, String oldPath, String newPath) {
+    public void renameFile(UUID projectId, String oldPath, String newPath) {
         try {
             if (!repository.existsByProjectIdAndPath(projectId, oldPath)) {
                 throw new FileNotFoundException("File not found: " + oldPath);
@@ -185,7 +189,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<String> listFiles(Long projectId) {
+    public List<String> listFiles(UUID projectId) {
         try {
             return repository.findAllByProjectId(projectId)
                     .stream()
@@ -201,7 +205,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public InputStream readFile(Long projectId, String path) {
+    public GetObjectResponse readFile(UUID projectId, String path) {
         try {
             if (!repository.existsByProjectIdAndPath(projectId, path)) {
                 throw new FileNotFoundException("File not found: " + path);

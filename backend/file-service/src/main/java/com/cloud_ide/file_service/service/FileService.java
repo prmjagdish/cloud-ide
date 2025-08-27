@@ -2,18 +2,19 @@ package com.cloud_ide.file_service.service;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.UUID;
 
 public interface FileService {
 
-    void createFile(Long projectId, String path, InputStream content, long size, String contentType);
+    void createFile(UUID projectId, String path, InputStream content, long size, String contentType);
 
-    void updateFile(Long projectId, String path, InputStream content, long size, String contentType);
+    void updateFile(UUID projectId, String path, InputStream content, long size, String contentType);
 
-    void deleteFile(Long projectId, String path);
+    void deleteFile(UUID projectId, String path);
 
-    void renameFile(Long projectId, String oldPath, String newPath);
+    void renameFile(UUID projectId, String oldPath, String newPath);
 
-    List<String> listFiles(Long projectId);
+    List<String> listFiles(UUID projectId);
 
-    InputStream readFile(Long projectId, String path);
+    InputStream readFile(UUID projectId, String path);
 }
