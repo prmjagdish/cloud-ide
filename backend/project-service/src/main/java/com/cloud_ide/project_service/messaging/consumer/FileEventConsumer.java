@@ -1,8 +1,8 @@
 package com.cloud_ide.project_service.messaging.consumer;
 
 import com.cloud_ide.project_service.dto.ProjectReadyEvent;
+import com.cloud_ide.project_service.messaging.config.RabbitMQConfig;
 import com.cloud_ide.project_service.service.impl.ProjectServiceImpl;
-import com.cloudide.common.config.RabbitMQConfig;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 

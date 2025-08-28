@@ -13,7 +13,7 @@
         <module>backend/file-service</module>
         <module>backend/project-service</module>
         <!-- Frontend & infra are not Maven modules -->
-        <module>backend/rabbitmq-common</module>
+<!--        <module>backend/rabbitmq-common</module>-->
 
     </modules>
 

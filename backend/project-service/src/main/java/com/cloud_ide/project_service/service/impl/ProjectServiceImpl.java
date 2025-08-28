@@ -1,6 +1,6 @@
 package com.cloud_ide.project_service.service.impl;
 
-import com.cloud_ide.project_service.client.FileServiceClient;
+
 import com.cloud_ide.project_service.dto.ProjectReadyEvent;
 import com.cloud_ide.project_service.dto.ProjectRequest;
 import com.cloud_ide.project_service.exception.ProjectNotFoundException;
@@ -22,12 +22,11 @@ import java.util.UUID;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final FileServiceClient fileServiceClient;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository,
-                              FileServiceClient fileServiceClient) {
+
+    public ProjectServiceImpl(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
-        this.fileServiceClient = fileServiceClient;
+
     }
 
     @Override

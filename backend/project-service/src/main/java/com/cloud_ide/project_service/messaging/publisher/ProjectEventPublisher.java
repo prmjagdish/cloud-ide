@@ -2,7 +2,8 @@ package com.cloud_ide.project_service.messaging.publisher;
 
 import com.cloud_ide.project_service.dto.ProjectBootstrapRequest;
 import com.cloud_ide.project_service.dto.ProjectDeleteRequest;
-import com.cloudide.common.config.RabbitMQConfig;
+
+import com.cloud_ide.project_service.messaging.config.RabbitMQConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
