@@ -1,0 +1,18 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: auth-service
+
+  datasource:
+    url: jdbc:postgresql://dpg-d2li9njuibrs73f9il7g-a.singapore-postgres.render.com/project_service
+    username: project_service_user
+    password: 9r8A1NciBpMKMVJd9ybBGwSotJ16mXTs
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+
