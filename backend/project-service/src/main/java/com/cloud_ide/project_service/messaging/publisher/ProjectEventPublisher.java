@@ -36,7 +36,7 @@ public class ProjectEventPublisher {
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.PROJECT_EXCHANGE,
                 RabbitMQConfig.PROJECT_DELETE_KEY,
-                request
+                request.getProjectId()
         );
     }
 }
