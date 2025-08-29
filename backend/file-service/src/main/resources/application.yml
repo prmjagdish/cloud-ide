@@ -14,12 +14,20 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        formate-sql: true
+        format-sql: true
+
+  rabbitmq:
+      host: ${RABBITMQ_HOST:localhost}
+      port: ${RABBITMQ_PORT:5672}
+      username: ${RABBITMQ_USERNAME:guest}
+      password: ${RABBITMQ_PASSWORD:guest}
+      virtual-host: ${RABBITMQ_VHOST:/}
+
 
 minio:
-  endpoint: http://localhost:9000
-  accessKey: minioadmin
-  secretKey: minioadmin
-  bucket: userworkspace
+  endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+  accessKey: ${MINIO_ACCESS_KEY:minioadmin}
+  secretKey: ${MINIO_SECRET_KEY:minioadmin}
+  bucket: ${MINIO_BUCKET:userworkspace}
 
 

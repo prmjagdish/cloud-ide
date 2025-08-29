@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     @Transactional
-    public void createFolder(Long projectId, String folderPath) {
+    public void createFolder(UUID projectId, String folderPath) {
         String fullPath = projectId + "/" + folderPath + "/";
         try {
             // Save empty object in MinIO
@@ -55,7 +56,7 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     @Transactional
-    public void deleteFolder(Long projectId, String folderPath) {
+    public void deleteFolder(UUID projectId, String folderPath) {
         String prefix = projectId + "/" + folderPath + "/";
         try {
             if (!repository.existsByProjectIdAndPath(projectId, prefix)) {
@@ -90,7 +91,7 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     @Transactional
-    public void renameFolder(Long projectId, String oldFolderPath, String newFolderPath) {
+    public void renameFolder(UUID projectId, String oldFolderPath, String newFolderPath) {
         String oldPrefix = projectId + "/" + oldFolderPath + "/";
         String newPrefix = projectId + "/" + newFolderPath + "/";
         try {
@@ -137,12 +138,15 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public List<String> listFolderContent(Long projectId, String folderPath) {
+    public List<String> listFolderContent(UUID projectId, String folderPath) {
         List<String> contents = new ArrayList<>();
         try {
             String prefix = (projectId.toString().equals(folderPath)) ? folderPath + "/" : projectId + "/" + folderPath + "/";
-            Iterable<Result<Item>> results = minioClient.listObjects(
-                    ListObjectsArgs.builder().bucket(bucketName).prefix(prefix).recursive(false).build()
+            Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder()
+                    .bucket(bucketName)
+                    .prefix(prefix)
+                    .recursive(false)
+                    .build()
             );
 
             for (Result<Item> result : results) {

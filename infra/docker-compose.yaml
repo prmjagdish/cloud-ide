@@ -1,18 +1,56 @@
-version: '3.9'
 
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: cloudide-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+
   minio:
     image: minio/minio:latest
-    container_name: minio
+    container_name: cloudide-minio
     ports:
       - "9000:9000"
       - "9001:9001"
     environment:
       MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin   # <-- Match with file-service
+      MINIO_ROOT_PASSWORD: minioadmin
     command: server /data --console-address ":9001"
     volumes:
       - minio-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 5s
+      retries: 5
+
+  project-service:
+    build:
+      context: ../backend/project-service
+      dockerfile: Dockerfile
+    container_name: project-service
+    ports:
+      - "8081:8081"
+    volumes:
+      - ../backend/project-service/src:/app/src
+      - ../backend/project-service/pom.xml:/app/pom.xml
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_VHOST: /
     restart: unless-stopped
 
   file-service:
@@ -21,14 +59,26 @@ services:
       dockerfile: Dockerfile
     container_name: file-service
     ports:
-      - "8080:8080"
+      - "8082:8082"
+    volumes:
+      - ../backend/file-service/src:/app/src
+      - ../backend/file-service/pom.xml:/app/pom.xml
+    depends_on:
+      minio:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     environment:
       MINIO_ENDPOINT: http://minio:9000
-      MINIO_ACCESS_KEY: minioadmin      # <-- Same as MINIO_ROOT_USER
-      MINIO_SECRET_KEY: minioadmin      # <-- Same as MINIO_ROOT_PASSWORD
-      MINIO_BUCKET: files
-    depends_on:
-      - minio
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET: userworkspace
+      SPRING_PROFILES_ACTIVE: dev
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_VHOST: /
     restart: unless-stopped
 
 volumes:

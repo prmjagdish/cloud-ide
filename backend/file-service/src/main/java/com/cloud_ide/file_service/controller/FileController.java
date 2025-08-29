@@ -7,6 +7,8 @@ import com.cloud_ide.file_service.dto.UpdateFileRequest;
 import com.cloud_ide.file_service.service.FileService;
 import com.cloud_ide.file_service.service.impl.FileServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/projects/{projectId}/file")
@@ -26,7 +29,7 @@ public class FileController {
     /** Create / Upload File **/
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FileUploadResponse> uploadFile(
-            @PathVariable Long projectId,
+            @PathVariable UUID projectId,
             @ModelAttribute FileUploadRequest request) throws Exception {
 
         if (request.getFile() != null && !request.getFile().isEmpty()) {
@@ -54,7 +57,7 @@ public class FileController {
     /** Update File **/
     @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FileUploadResponse> updateFile(
-            @PathVariable Long projectId,
+            @PathVariable UUID projectId,
             @ModelAttribute UpdateFileRequest request) throws Exception {
 
         fileService.updateFile(
@@ -71,7 +74,7 @@ public class FileController {
 
     /** Delete File **/
     @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse> deleteFile(@PathVariable Long projectId, @RequestParam String path) {
+    public ResponseEntity<ApiResponse> deleteFile(@PathVariable UUID projectId, @RequestParam String path) {
         fileService.deleteFile(projectId, path);
         return ResponseEntity.ok(new ApiResponse("success", "File deleted successfully", Instant.now()));
     }
@@ -79,7 +82,7 @@ public class FileController {
     /** Rename File **/
     @PostMapping("/rename")
     public ResponseEntity<ApiResponse> renameFile(
-            @PathVariable Long projectId,
+            @PathVariable UUID projectId,
             @RequestParam String oldPath,
             @RequestParam String newPath) {
 
@@ -89,13 +92,13 @@ public class FileController {
 
     /** List Files **/
     @GetMapping("/list")
-    public ResponseEntity<List<String>> listFiles(@PathVariable Long projectId) {
+    public ResponseEntity<List<String>> listFiles(@PathVariable UUID projectId) {
         return ResponseEntity.ok(fileService.listFiles(projectId));
     }
 
     /** Read File **/
-    @GetMapping("/read")
-    public ResponseEntity<InputStream> readFile(@PathVariable Long projectId, @RequestParam String path) {
-        return ResponseEntity.ok(fileService.readFile(projectId, path));
+    @GetMapping(value="/read",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<InputStreamResource> readFile(@PathVariable UUID projectId, @RequestParam String path) {
+        return ResponseEntity.ok(new InputStreamResource(fileService.readFile(projectId, path)));
     }
 }

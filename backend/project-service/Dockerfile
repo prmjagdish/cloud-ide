@@ -7,6 +7,6 @@ RUN mvn package -DskipTests
 
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
-COPY --from=builder /app/target/file-service-0.0.1-SNAPSHOT.jar app.jar
-EXPOSE 8082
+COPY --from=builder /app/target/project-service-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE 8081
 CMD ["java", "-jar", "app.jar"]

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,7 +15,7 @@ public final class FileMetadata {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long projectId;
+    private UUID projectId;
     private String path;
     private Boolean isFolder;
     private Instant createdAt;
