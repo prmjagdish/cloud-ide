@@ -1,3 +1,4 @@
+
 services:
   rabbitmq:
     image: rabbitmq:3-management
@@ -16,8 +17,8 @@ services:
     image: minio/minio:latest
     container_name: cloudide-minio
     ports:
-      - "9000:9000"
       - "9001:9001"
+      - "9002:9002"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
@@ -27,50 +28,70 @@ services:
     restart: unless-stopped
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
-      interval: 5s
-      retries: 5
+      interval: 10s
+      retries: 20
 
   api-gateway:
     build:
       context: ../backend/api-gateway
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: api-gateway
     ports:
       - "8080:8080"
     depends_on:
       project-service:
-        condition: service_started
+        condition: service_healthy
       file-service:
-        condition: service_started
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    volumes:
+      - ../backend/api-gateway:/app
+      - ~/.m2:/root/.m2
+    command: ["mvn", "spring-boot:run"]
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
     restart: unless-stopped
+
 
   project-service:
     build:
       context: ../backend/project-service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: project-service
     ports:
       - "8081:8081"
     depends_on:
       rabbitmq:
         condition: service_healthy
+    volumes:
+      - ../backend/project-service:/app
+      - ~/.m2:/root/.m2
+    command: ["mvn", "spring-boot:run"]
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_USERNAME: guest
       RABBITMQ_PASSWORD: guest
       RABBITMQ_VHOST: /
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8081/actuator/health" ]
+      interval: 10s
+      retries: 20
+      start_period: 10s
 
   file-service:
     build:
       context: ../backend/file-service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: file-service
     ports:
       - "8082:8082"
@@ -79,17 +100,27 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    volumes:
+      - ../backend/file-service:/app
+      - ~/.m2:/root/.m2
+    command: ["mvn","spring-boot:run"]
     environment:
       MINIO_ENDPOINT: http://minio:9000
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
       MINIO_BUCKET: userworkspace
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_USERNAME: guest
       RABBITMQ_PASSWORD: guest
       RABBITMQ_VHOST: /
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8082/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
     restart: unless-stopped
 
 volumes:

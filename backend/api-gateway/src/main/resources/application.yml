@@ -1,0 +1,37 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        # Project Service Route
+        - id: project-service
+          uri: http://project-service:8081
+          predicates:
+            - Path=/projects/**
+          filters:
+            - StripPrefix=0
+
+        # File Service - Files
+        - id: file-service-files
+          uri: http://file-service:8082
+          predicates:
+            - Path=/projects/*/file/**
+          filters:
+            - StripPrefix=0
+
+        # File Service - Folders
+        - id: file-service-folders
+          uri: http://file-service:8082
+          predicates:
+            - Path=/projects/*/folder/**
+          filters:
+            - StripPrefix=0
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG

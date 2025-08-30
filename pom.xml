@@ -12,9 +12,8 @@
         <module>backend/auth-service</module>
         <module>backend/file-service</module>
         <module>backend/project-service</module>
+        <module>backend/api-gateway</module>
         <!-- Frontend & infra are not Maven modules -->
-<!--        <module>backend/rabbitmq-common</module>-->
-
     </modules>
 
     <properties>
@@ -23,7 +22,6 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
