@@ -103,6 +103,7 @@ services:
     volumes:
       - ../backend/file-service:/app
       - ~/.m2:/root/.m2
+      - workspaces:/var/lib/cloud-ide/workspaces
     command: ["mvn","spring-boot:run"]
     environment:
       MINIO_ENDPOINT: http://minio:9000
@@ -115,6 +116,7 @@ services:
       RABBITMQ_USERNAME: guest
       RABBITMQ_PASSWORD: guest
       RABBITMQ_VHOST: /
+      FILE_SERVICE_WORKSPACE_DIR: /var/lib/cloud-ide/workspaces
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8082/actuator/health" ]
       interval: 10s
@@ -125,3 +127,5 @@ services:
 
 volumes:
   minio-data:
+  workspaces:
+

@@ -26,12 +26,14 @@ import java.util.zip.ZipInputStream;
 public class ProjectBootstrapImpl implements ProjectBootstrap {
     @Value("${minio.bucket}")
     private String bucketName;
+    @Value("${file-service.workspace-dir}")
+    private String workspaceDir;
     private final MinioClient minioClient;
 
 
     @Override
     public void initializeProjectStructure(UUID projectId) {
-        Path projectRoot = Paths.get(bucketName + projectId.toString());
+        Path projectRoot = Paths.get(workspaceDir, projectId.toString());
 
         try {
             Files.createDirectories(projectRoot);

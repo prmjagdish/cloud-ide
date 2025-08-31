@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/projects/{projectId}/file")
+@RequestMapping("/p/{projectId}/file")
 @RequiredArgsConstructor
 public class FileController {
 

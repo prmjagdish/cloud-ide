@@ -20,7 +20,7 @@ spring:
         - id: file-service-files
           uri: http://file-service:8082
           predicates:
-            - Path=/projects/*/file/**
+            - Path=/p/{projectId}/file/**
           filters:
             - StripPrefix=0
 
@@ -28,7 +28,7 @@ spring:
         - id: file-service-folders
           uri: http://file-service:8082
           predicates:
-            - Path=/projects/*/folder/**
+            - Path=/p/{projectId}/folder/**
           filters:
             - StripPrefix=0
 
