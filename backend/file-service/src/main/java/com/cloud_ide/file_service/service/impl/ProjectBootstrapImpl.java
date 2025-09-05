@@ -26,7 +26,7 @@ import java.util.zip.ZipInputStream;
 public class ProjectBootstrapImpl implements ProjectBootstrap {
     @Value("${minio.bucket}")
     private String bucketName;
-    @Value("${file-service.workspace-dir}")
+    @Value("${file-service.workspace-dir:target/workspace}")
     private String workspaceDir;
     private final MinioClient minioClient;
 

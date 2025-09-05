@@ -4,7 +4,6 @@ WORKDIR /app
 
 # Copy pom.xml first and download dependencies
 COPY pom.xml .
-RUN mvn dependency:go-offline
 
 # Copy source (will be overridden by volume in docker-compose)
 COPY src ./src
