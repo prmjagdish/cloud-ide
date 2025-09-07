@@ -1,0 +1,14 @@
+ .gutter {
+          background-color: #3c3c3c !important;
+          cursor: row-resize;
+        }
+        .gutter.gutter-horizontal {
+          cursor: col-resize;
+        }
+        ::-webkit-scrollbar {
+          width: 0px;
+          height: 0px;
+        }
+        .split {
+          margin: 0 !important;
+        }
