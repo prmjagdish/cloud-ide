@@ -7,7 +7,7 @@ const LinuxTerminal = () => {
   const term = useRef(null);
 
   useEffect(() => {
-    term.current = new Terminal({
+    const xterm = new Terminal({
       cursorBlink: true,
       theme: {
         foreground: "#CCCCCC",
@@ -17,20 +17,52 @@ const LinuxTerminal = () => {
       },
     });
 
-    term.current.open(terminalRef.current);
-    term.current.writeln("Welcome to Cloud IDE!");
-    term.current.writeln("$ ");
+    term.current = xterm;
 
-    term.current.onKey(({ key, domEvent }) => {
+    xterm.open(terminalRef.current);
+    xterm.focus();
+    xterm.writeln("Welcome to Cloud IDE!");
+    xterm.write("$ ");
+
+    let buffer = "";
+
+    xterm.onKey(({ key, domEvent }) => {
       if (domEvent.key === "Enter") {
-        term.current.write("\r\n$ ");
+        xterm.write("\r\nYou typed: " + buffer + "\r\n$ ");
+        buffer = "";
+      } else if (domEvent.key === "Backspace") {
+        if (buffer.length > 0) {
+          buffer = buffer.slice(0, -1);
+          xterm.write("\b \b");
+        }
       } else {
-        term.current.write(key);
+        buffer += key;
+        xterm.write(key);
       }
     });
+
+    return () => {
+      xterm.dispose();
+    };
   }, []);
 
-  return <div ref={terminalRef} style={{ height: "400px", width: "100%" }} />;
+  return (
+    <div
+      style={{
+        height: "400px",
+        width: "100%",
+        backgroundColor: "#1E1E1E",
+        padding: "10px", 
+        boxSizing: "border-box",
+      }}
+    >
+      <div
+        ref={terminalRef}
+        tabIndex={0}
+        style={{ height: "100%", width: "100%" }}
+      />
+    </div>
+  );
 };
 
 export default LinuxTerminal;
