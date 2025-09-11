@@ -4,11 +4,14 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { User, CreditCard, HelpCircle, Settings, LogOut } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const UserProfileMenu = () => {
+
+  const { logout } = useAuth();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -49,6 +52,7 @@ const UserProfileMenu = () => {
         </DropdownMenuItem>
 
         <DropdownMenuItem
+        onClick={logout}
           className="flex items-center gap-2 text-gray-300 text-sm
                               data-[highlighted]:bg-[#373737] data-[highlighted]:text-gray-300"
         >
