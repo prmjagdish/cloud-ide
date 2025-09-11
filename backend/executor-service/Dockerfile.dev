@@ -1,0 +1,17 @@
+# Use Maven with JDK 21 (same as others)
+FROM maven:3.9.9-eclipse-temurin-21
+
+# Set working directory inside container
+WORKDIR /app
+
+# Copy pom.xml first and download dependencies (layer caching)
+COPY pom.xml .
+
+# Pre-download dependencies (so mvn doesn’t run from scratch every time)
+# RUN mvn dependency:go-offline -B
+
+# Copy source code (will be overridden by volume in docker-compose)
+COPY src ./src
+
+# Run the Spring Boot app in dev mode
+CMD ["mvn", "spring-boot:run"]

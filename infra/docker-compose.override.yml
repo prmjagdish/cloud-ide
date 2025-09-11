@@ -168,6 +168,47 @@ services:
       retries: 20
       start_period: 30s
     restart: unless-stopped
+#  executor-service:
+#    build:
+#      context: ../backend/executor-service
+#      dockerfile: Dockerfile.dev
+#    container_name: executor-service
+#    ports:
+#      - "8083:8083"   # make sure your Spring Boot runs on 8083
+#    depends_on:
+#      eureka-service:
+#        condition: service_healthy
+#      rabbitmq:
+#        condition: service_started
+#      minio:
+#        condition: service_healthy
+#    volumes:
+#      - ../backend/executor-service:/app
+#      - ~/.m2:/root/.m2   # reuse local Maven cache
+#      - workspaces:/var/lib/cloud-ide/workspaces  # ✅ give same workspace as file-service
+#    command: [ "mvn", "spring-boot:run" ]
+#    environment:
+#      SPRING_PROFILES_ACTIVE: dev
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+#      MINIO_ENDPOINT: http://minio:9000
+#      MINIO_ACCESS_KEY: minioadmin
+#      MINIO_SECRET_KEY: minioadmin
+#      MINIO_BUCKET: userworkspace
+#      RABBITMQ_HOST: rabbitmq
+#      RABBITMQ_PORT: 5672
+#      RABBITMQ_USERNAME: guest
+#      RABBITMQ_PASSWORD: guest
+#      RABBITMQ_VHOST: /
+#      EXECUTOR_WORKSPACE_DIR: /var/lib/cloud-ide/workspaces  # ✅ so executor & file-service share workspace
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:8083/actuator/health" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 20
+#      start_period: 20s
+#    restart: unless-stopped
+
+
 
 volumes:
   minio-data:

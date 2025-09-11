@@ -1,0 +1,6 @@
+runtimes:
+  java-springboot:
+    baseImage: openjdk:17-maven
+    runCommand: "mvn spring-boot:run"
+    buildCommand: "mvn clean package"
+    workDir: /app
