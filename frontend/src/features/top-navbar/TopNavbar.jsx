@@ -1,11 +1,12 @@
 import React from "react";
-import RunControls from "../../features/topnavbar/RunControls";
-import DateTimeDisplay from "../../features/topnavbar/DateTimeDisplay";
-import ProjectDropdown from "../../features/topnavbar/ProjectDropdown";
+import RunControls from "@/features/top-navbar/RunControls";
+import DateTimeDisplay from "@/features/top-navbar/DateTimeDisplay";
+import ProjectDropdown from "@/features/top-navbar/ProjectDropdown";
 import UserProfileMenu from "@/features/user/UserProfileMenu";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import logo from "@/assets/logo.png"
 
 const TopNavbar = () => {
   const { isAuthenticated } = useAuth();
@@ -13,7 +14,11 @@ const TopNavbar = () => {
   return (
     <div className="w-full flex h-10 items-center justify-between bg-[#252526] text-white px-4 py-2 shadow-md border-gray-800 border-b">
       <div className="flex items-center gap-11">
-        <span className="font-bold text-lg">☁️</span>
+        <img
+          src={logo}
+          alt="Cloud IDE Logo"
+          className="h-7 w-auto"
+        />
         <ProjectDropdown />
       </div>
 

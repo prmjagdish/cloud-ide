@@ -1,5 +1,5 @@
 import React from "react";
-import FileExplorer from "../externallibraries/FileExplorer";
+import FileExplorer from "@/features/file-explorer/FileExplorer";
 
 const LeftSidebar = () => {
   return (

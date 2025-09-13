@@ -29,6 +29,7 @@ spring:
             - Path=/projects/**
           filters:
             - StripPrefix=0
+            - UserIdRelayFilter
 
         # File service - files
         - id: file-service-files

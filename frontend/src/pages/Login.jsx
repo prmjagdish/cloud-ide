@@ -8,6 +8,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { login as apiLogin } from "@/utils/apis/auth";
 import { useAuth } from "@/context/AuthContext";
+import logo from "@/assets/logo.png";
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -28,7 +29,9 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#1E1E1E] text-gray-200 px-4">
       <div className="bg-[#252526] p-10 rounded-2xl shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-semibold mb-8 text-center">Login to Cloud IDE</h2>
+        <div className="flex justify-center">
+          <img src={logo} alt="" className="h-10 mb-5"/> 
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Email */}

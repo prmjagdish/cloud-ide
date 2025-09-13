@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Split from "react-split";
-import TopNavbar from "@/components/layoutcom/TopNavbar";
-import LeftSidebar from "@/components/layoutcom/FileExplorerWrapper";
-import EditorArea from "@/components/layoutcom/EditorWrapper";
-import Terminal from "@/components/layoutcom/TerminalWrapper";
-import Tabbar from "@/components/layoutcom/Tabbar";
+import TopNavbar from "@/features/top-navbar/TopNavbar";
+import LeftSidebar from "@/features/file-explorer/FileExplorerWrapper";
+import EditorArea from "@/features/editor/EditorWrapper";
+import Terminal from "@/features/terminal/TerminalWrapper";
+import Tabbar from "@/features/left-sidebar/Tabbar";
 
 const IDELayout = () => {
   const [activeTab, setActiveTab] = useState("files");

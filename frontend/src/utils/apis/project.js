@@ -1,22 +1,35 @@
-import axios from "axios";
+import apiClient from "./apiClient";
 
-// create axios instance
-const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-});
-
-const getProjectsByUser = async (userId) => {
+//  No need to pass userId, backend extracts it from JWT
+const getProjectsByUser = async () => {
   try {
-    const responce = await apiClient.get("/projects", {
-      headers: {
-        userId: userId,
-      },
-    });
-    return responce.data;
+    const response = await apiClient.get("/projects");
+    return response.data; // project list
   } catch (error) {
     console.error("Error fetching projects:", error);
     throw error;
   }
 };
 
-export default getProjectsByUser;
+const createProject = async ({ name, buildTool, userId}) => {
+  try {
+    const response = await apiClient.post(
+      "/bootstrap",
+      {
+        name: name,
+        buildTool: buildTool,
+        language: "JAVA",
+      },
+      {
+        headers: {
+          "userId": userId
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default { getProjectsByUser, createProject };

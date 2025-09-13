@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 
 const UserProfileMenu = () => {
 
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <DropdownMenu>
@@ -27,7 +27,7 @@ const UserProfileMenu = () => {
       >
         <div className="flex items-center gap-2 px-2 py-2 text-gray-300 font-medium text-sm border-b border-gray-800">
           <User className="flex-shrink-0" size={16} />
-          <span className="truncate max-w-[calc(100%-24px)]">{"userEdddddddddmailhkjgfiufuw"}</span>
+          <span className="truncate max-w-[calc(100%-24px)]">{user?.username || "Guest"}</span>
         </div>
 
         <DropdownMenuItem

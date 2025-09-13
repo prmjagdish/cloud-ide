@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Tree } from "react-arborist";
-import FileNode from "@/features/fileexplorer/FileNode";
+import FileNode from "@/features/file-explorer/FileNode";
 
 const initialData = [
   {

@@ -1,5 +1,5 @@
 import { React, useState } from "react";
-import CodeEditor from "../externallibraries/CodeEditor";
+import CodeEditor from "@/features/editor/CodeEditor";
 
 const EditorArea = () => {
   const [code, setCode] = useState("// Start coding...");

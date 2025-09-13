@@ -1,5 +1,5 @@
 import React from "react";
-import LinuxTerminal from "../externallibraries/Termial";
+import LinuxTerminal from "@/features/terminal/Termial";
 const Terminal = () => {
   return <LinuxTerminal/>;
 };
