@@ -1,35 +1,29 @@
 import apiClient from "./apiClient";
 
-//  No need to pass userId, backend extracts it from JWT
-const getProjectsByUser = async () => {
+export const getProjectsByUser = async () => {
   try {
     const response = await apiClient.get("/projects");
-    return response.data; // project list
+    return response.data; 
   } catch (error) {
     console.error("Error fetching projects:", error);
     throw error;
   }
 };
 
-const createProject = async ({ name, buildTool, userId}) => {
+export const createProject = async ({ name }) => {
   try {
+    console.log("name from project.js",name);
     const response = await apiClient.post(
-      "/bootstrap",
+      "/projects/bootstrap",
       {
-        name: name,
-        buildTool: buildTool,
+        name,
+        buildTool: "MAVEN ",
         language: "JAVA",
-      },
-      {
-        headers: {
-          "userId": userId
-        },
       }
     );
-    return response.data;
+    console.log(response.data);
   } catch (error) {
-    console.log(error);
+    console.log("create :" , error);
   }
 };
 
-export default { getProjectsByUser, createProject };

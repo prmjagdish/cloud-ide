@@ -9,31 +9,44 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/ui/radio-group";
+import { createProject }  from "@/utils/apis/project"; 
 
 const JavaProjectForm = ({ onClose }) => {
-  
   const [projectName, setProjectName] = useState("");
   const [buildTool, setBuildTool] = useState("maven");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!projectName.trim()) return;
-    onClose();
+
+    setLoading(true);
+    try {
+      console.log("funation called",projectName);
+      createProject({name : projectName});
+      onClose(); 
+    } catch (error) {
+      console.error("Failed to create project:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md text-white border-gray-800 bg-[#252526]">
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md text-white bg-[#252526]">
         <DialogHeader>
           <DialogTitle>Create Java Project</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Project Name */}
           <div className="space-y-2">
             <Label htmlFor="projectName">Project Name</Label>
-            <Input className="border-gray-600"
+            <Input
               id="projectName"
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
@@ -42,7 +55,6 @@ const JavaProjectForm = ({ onClose }) => {
             />
           </div>
 
-          {/* Build Tool */}
           <div className="space-y-2">
             <Label>Build Tool</Label>
             <RadioGroup
@@ -61,16 +73,12 @@ const JavaProjectForm = ({ onClose }) => {
             </RadioGroup>
           </div>
 
-          {/* Actions */}
           <DialogFooter className="flex justify-end gap-2">
-            <Button onClick={onClose} className="bg-[#252526] hover:bg-[#333333]  font-medium py-2 px-4 border border-gray-600 rounded-md transition-colors duration-200">
-              Cancel
-            </Button>{" "}
-            <Button
-              
-              className="bg-[#252526] hover:bg-[#333333]  font-medium py-2 px-4 border border-gray-600 rounded-md transition-colors duration-200"
-            >
-              Create
+            <Button type="submit" disabled={loading}>
+              {loading ? "Creating..." : "Create"}
+            </Button>
+            <Button type="button" variant="secondary" onClick={onClose}>
+              Close
             </Button>
           </DialogFooter>
         </form>
