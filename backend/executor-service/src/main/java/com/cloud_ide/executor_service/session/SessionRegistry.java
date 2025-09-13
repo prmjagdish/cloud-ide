@@ -123,4 +123,45 @@ public class SessionRegistry {
     public int getActiveSessionCount() {
         return activeSessions.size();
     }
+
+    /**
+     * 🔧 EDGE CASE FIX: Check if user has any active container
+     */
+    public boolean hasUserActiveContainer(String userId) {
+        return getAllActiveSessions()
+                .stream()
+                .anyMatch(session -> session.getUserId().equals(userId) &&
+                        isActiveContainerState(session.getState()));
+    }
+
+    /**
+     * 🔧 Helper: Check if session state represents active container
+     */
+    private boolean isActiveContainerState(SessionState state) {
+        return state == SessionState.CONTAINER_STARTED ||
+                state == SessionState.PROJECT_RUNNING ||
+                state == SessionState.PROJECT_BUILDING ||
+                state == SessionState.IDLE;
+    }
+
+    /**
+     * 🔧 EDGE CASE FIX: Get user's active session
+     */
+    public Optional<Session> getUserActiveSession(String userId) {
+        return getAllActiveSessions()
+                .stream()
+                .filter(session -> session.getUserId().equals(userId) &&
+                        isActiveContainerState(session.getState()))
+                .findFirst();
+    }
+
+    /**
+     * 🔧 EDGE CASE FIX: Validate user project ownership
+     */
+    public boolean hasValidUserProject(String userId, String projectId) {
+        return getSession(userId, projectId)
+                .map(session -> session.getUserId().equals(userId))
+                .orElse(false);
+    }
+
 }

@@ -4,12 +4,14 @@ import com.cloud_ide.executor_service.session.IDEService;
 import com.cloud_ide.executor_service.session.SessionRegistry;
 import com.cloud_ide.executor_service.session.SessionTimeoutService;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/run")
 public class RunController {
@@ -36,14 +38,30 @@ public class RunController {
             @RequestParam("projectId") String projectId,
             @RequestParam("runtimeName") String runtimeName) {
 
-        // ✅ Refresh session on user action
-        sessionRegistry.refreshSession(userId, projectId);
+        Map<String, Object> response = new HashMap<>();
 
-        // ✅ Single call to IDEService - handles all orchestration
-        // IDEService -> ContainerManager flow
-        Map<String, Object> response = ideService.startProject(userId, projectId, runtimeName);
+        try {
+            // 🔧 EDGE CASE FIX: Pre-check if user has active container
+            if (sessionRegistry.hasUserActiveContainer(userId)) {
+                response.put("success", false);
+                response.put("error", "You already have an active container running. Please stop it first.");
+                response.put("errorCode", "MULTIPLE_CONTAINERS_NOT_ALLOWED");
+                return ResponseEntity.badRequest().body(response);
+            }
 
-        return ResponseEntity.ok(response);
+            // Refresh session on user action
+            sessionRegistry.refreshSession(userId, projectId);
+
+            // Start project through IDEService
+            response = ideService.startProject(userId, projectId, runtimeName);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("❌ Error in start endpoint for {}:{}", userId, projectId, e);
+            response.put("success", false);
+            response.put("error", "Internal server error: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
     }
 
     /**
