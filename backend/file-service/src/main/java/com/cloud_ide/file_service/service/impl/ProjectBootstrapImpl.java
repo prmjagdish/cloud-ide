@@ -29,6 +29,7 @@ public class ProjectBootstrapImpl implements ProjectBootstrap {
     @Value("${file-service.workspace-dir:target/workspace}")
     private String workspaceDir;
     private final MinioClient minioClient;
+    private final FolderStructureImpl folderStructure;
 
 
     @Override

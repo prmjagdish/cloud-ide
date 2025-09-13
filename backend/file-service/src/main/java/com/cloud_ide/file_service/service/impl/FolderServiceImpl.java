@@ -25,6 +25,7 @@ public class FolderServiceImpl implements FolderService {
 
     private final MinioClient minioClient;
     private final FileMetadataRepository repository;
+    private final FolderStructureImpl folderStructure;
 
     @Override
     @Transactional
@@ -48,6 +49,7 @@ public class FolderServiceImpl implements FolderService {
             metadata.setCreatedAt(Instant.now());
             metadata.setUpdatedAt(Instant.now());
             repository.save(metadata);
+            folderStructure.syncWithMinIO(projectId);
 
         } catch (Exception e) {
             throw new FileServiceException("Failed to create folder: " + folderPath, e);
@@ -78,6 +80,7 @@ public class FolderServiceImpl implements FolderService {
                                 .build()
                 );
             }
+            folderStructure.syncWithMinIO(projectId);
 
             // Delete from DB
             repository.deleteByProjectIdAndPathStartingWith(projectId, prefix);
@@ -120,6 +123,7 @@ public class FolderServiceImpl implements FolderService {
 
                 // Delete old object
                 minioClient.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(oldObjectName).build());
+
             }
 
             // Update DB paths
@@ -129,6 +133,7 @@ public class FolderServiceImpl implements FolderService {
                 file.setUpdatedAt(Instant.now());
             }
             repository.saveAll(files);
+            folderStructure.syncWithMinIO(projectId);
 
         } catch (FolderNotFoundException e) {
             throw e;

@@ -33,6 +33,7 @@ public class FileServiceImpl implements FileService {
     private final FileMetadataRepository repository;
     private final MinioClient minioClient;
     private final MinioUtil minioUtil;
+    private final FolderStructureImpl folderStructure;
 
 
 
@@ -71,6 +72,7 @@ public class FileServiceImpl implements FileService {
             metadata.setCreatedAt(Instant.now());
             metadata.setUpdatedAt(Instant.now());
             repository.save(metadata);
+            folderStructure.syncWithMinIO(projectId);
 
         } catch (Exception e) {
             throw new FileServiceException("Failed to create file: " + e.getMessage(), e);
@@ -126,9 +128,11 @@ public class FileServiceImpl implements FileService {
 
             // Remove from MinIO
          minioUtil.deleteFile(objectName);
+            folderStructure.syncWithMinIO(projectId);
 
             // Remove metadata
             repository.deleteByProjectIdAndPath(projectId, path);
+
 
         } catch (FileNotFoundException e) {
             throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, e.getMessage());
@@ -177,6 +181,7 @@ public class FileServiceImpl implements FileService {
             metadata.setPath(newPath);
             metadata.setUpdatedAt(Instant.now());
             repository.save(metadata);
+            folderStructure.syncWithMinIO(projectId);
 
         } catch (FileNotFoundException e) {
             throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, e.getMessage());
