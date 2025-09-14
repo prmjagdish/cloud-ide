@@ -7,13 +7,21 @@ import IDELayout from "@/layouts/IDELayout";
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
 import { AuthProvider } from "@/context/AuthContext";
+import { FileExplorerProvider } from "@/context/FileExplorerContext";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/ide" element={<IDELayout />} />
+          <Route
+            path="/ide"
+            element={
+              <FileExplorerProvider>
+                <IDELayout />
+              </FileExplorerProvider>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>

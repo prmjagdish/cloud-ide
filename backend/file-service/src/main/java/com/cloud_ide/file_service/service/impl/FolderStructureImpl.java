@@ -31,7 +31,7 @@ public class FolderStructureImpl implements FolderStructure {
     public Map<String, Object> getProjectFolderStructure(UUID projectId) {
         try {
             // MinIO path: userworkspace/{projectId}/helloworld/
-            String projectPrefix = projectId + "/helloworld/";
+            String projectPrefix = projectId + "/HelloWorld/";
 
             Iterable<Result<Item>> results = minioClient.listObjects(
                     ListObjectsArgs.builder()
@@ -49,7 +49,7 @@ public class FolderStructureImpl implements FolderStructure {
                 // Remove project prefix to get path relative to helloworld/
                 String relativePath = fullPath.substring(projectPrefix.length());
 
-                // Only add non-empty paths (skip helloworld folder itself)
+                // Only add non-empty paths (skip HelloWorld folder itself)
                 if (!relativePath.isEmpty()) {
                     allPaths.add(relativePath);
                 }
@@ -68,7 +68,7 @@ public class FolderStructureImpl implements FolderStructure {
     public void syncWithMinIO(UUID projectId) {
         try {
             // MinIO path: userworkspace/{projectId}/helloworld/
-            String projectPrefix = projectId + "/helloworld/";
+            String projectPrefix = projectId + "/HelloWorld/";
 
             // Clear existing database metadata for this project
             fileMetadataRepository.deleteByProjectIdAndPathStartingWith(projectId, "");

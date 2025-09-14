@@ -27,3 +27,17 @@ export const createProject = async ({ name }) => {
   }
 };
 
+//done
+export const getFolderStructure = async ({ projectId }) => {
+  try {
+    console.log("API called with projectId:", projectId);
+    const response = await apiClient.get(`/p/${projectId}/folder/structure`);
+    console.log("API response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error in getFolderStructure:", error);
+    throw error; // throw here so loadFolderStructure can catch
+  }
+};
+
+

@@ -1,14 +1,14 @@
 package com.cloud_ide.file_service.controller;
-
 import com.cloud_ide.file_service.dto.ApiResponse;
-import com.cloud_ide.file_service.service.FolderService;
 import com.cloud_ide.file_service.service.impl.FolderServiceImpl;
+import com.cloud_ide.file_service.service.impl.FolderStructureImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -17,6 +17,7 @@ import java.util.UUID;
 public class FolderController {
 
     private final FolderServiceImpl folderService;
+    private final FolderStructureImpl folderStructure;
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createFolder(
@@ -47,6 +48,12 @@ public class FolderController {
         return ResponseEntity.ok(
                 new ApiResponse("success", "Folder renamed successfully", Instant.now())
         );
+    }
+
+    @GetMapping("/structure")
+    public ResponseEntity<Map<String, Object>> getFolderStructure(@PathVariable("projectId") UUID projectId) {
+        Map<String, Object> structure = folderStructure.getProjectFolderStructure(projectId);
+        return ResponseEntity.ok(structure);
     }
 
     @GetMapping("/list")

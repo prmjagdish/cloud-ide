@@ -1,31 +1,14 @@
 import React, { useState } from "react";
 import { Tree } from "react-arborist";
 import FileNode from "@/features/file-explorer/FileNode";
-
-const initialData = [
-  {
-    id: "root",
-    name: "root",
-    children: [
-      {
-        id: "src",
-        name: "src",
-        children: [
-          { id: "App.js", name: "App.js" },
-          { id: "Editor.jsx", name: "Editor.jsx" },
-          { id: "Terminal.ts", name: "Terminal.ts" },
-        ],
-        
-      },
-      { id: "package.json", name: "package.json" },
-      { id: "README.md", name: "README.md" },
-    ],
-  },
-];
+import { useFileExplorer } from "@/context/FileExplorerContext";
 
 export default function FileExplorer() {
-  const [treeData, setTreeData] = useState(initialData);
+  const { folderData } = useFileExplorer();
+  const [treeData, setTreeData] = useState(folderData);
   const [editingId, setEditingId] = useState(null);
+
+  console.log("Data from FileExplorer :", treeData);
 
   return (
     <div className="h-full bg-[#1E1E1E] text-gray-200 border-r border-gray-800 flex flex-col">
