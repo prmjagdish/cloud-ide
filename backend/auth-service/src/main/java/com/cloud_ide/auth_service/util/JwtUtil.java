@@ -11,7 +11,7 @@ import java.util.UUID;
 @Component
 public class JwtUtil {
     private final String SECRET = "your-secret-keyfweffdsfdbgsdfbfd";  // move to config later
-    private final long EXPIRATION = 1000 * 60 * 60;   // 1 hour
+    private final long EXPIRATION = 30 * 24 * 60 * 60 ;   // 1 hour
 
     public String generateToken(String username, UUID userId) {
         return Jwts.builder()

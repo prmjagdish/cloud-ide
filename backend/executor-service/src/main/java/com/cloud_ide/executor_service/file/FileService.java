@@ -27,31 +27,31 @@ public class FileService {
     }
 
     /**
-     * Downloads the entire 'helloworld' folder inside projectId to /tmp/<projectId>/helloworld
+     * Downloads the entire 'HelloWorldHelloWorld' folder inside projectId to /tmp/<projectId>/HelloWorld
      *
      * @param projectId unique project identifier
      * @return Path to local temp project folder
      */
     public Path fetchProject(String projectId) {
         try {
-            Path tmpDir = Paths.get("/tmp", projectId, "helloworld");
+            Path tmpDir = Paths.get("/tmp", projectId, "HelloWorld");
             if (!Files.exists(tmpDir)) {
                 Files.createDirectories(tmpDir);
             }
 
-            // List all objects under projectId/helloworld/
+            // List all objects under projectId/HelloWorld/
             Iterable<Result<Item>> objects = minioClient.listObjects(
                     ListObjectsArgs.builder()
                             .bucket(bucketName)
-                            .prefix(projectId + "/helloworld/")
+                            .prefix(projectId + "/HelloWorld/")
                             .recursive(true)
                             .build()
             );
 
             for (Result<Item> result : objects) {
                 Item item = result.get();
-                String objectName = item.objectName(); // e.g. projectId/helloworld/src/Main.java
-                Path localPath = tmpDir.resolve(objectName.replace(projectId + "/helloworld/", ""));
+                String objectName = item.objectName(); // e.g. projectId/HelloWorld/src/Main.java
+                Path localPath = tmpDir.resolve(objectName.replace(projectId + "/HelloWorld/", ""));
 
                 // Create parent directories if needed
                 if (localPath.getParent() != null && !Files.exists(localPath.getParent())) {

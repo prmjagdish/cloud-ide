@@ -183,7 +183,7 @@ public class ContainerManager {
         RuntimeConfig config = runtimeRegistry.getRuntime(runtimeName);
 
         // Create project directory
-        Path projectPath = Paths.get("/tmp", projectId, "helloworld");
+        Path projectPath = Paths.get("/tmp", projectId, "HelloWorld");
         if (!Files.exists(projectPath)) {
             Files.createDirectories(projectPath);
         }
@@ -437,7 +437,7 @@ public class ContainerManager {
     // 🔧 ENHANCED: Build and run with better validation
     public void buildAndRunProject(String userId, String projectId, String runtimeName,
                                    Consumer<String> logConsumer) {
-        Path projectPath = Paths.get("/tmp", projectId, "helloworld");
+        Path projectPath = Paths.get("/tmp", projectId, "HelloWorld");
 
         try {
             // 🔧 EDGE CASE FIX: Validate before proceeding
@@ -548,7 +548,7 @@ public class ContainerManager {
 
     private void fetchProjectFromMinio(String bucketName, String projectId,
                                        Path projectPath, Consumer<String> logConsumer, String userId) throws Exception {
-        String projectSubfolder = "helloworld";
+        String projectSubfolder = "HelloWorld";
         String objectPrefix = projectId + "/" + projectSubfolder + "/";
 
         Iterable<Result<Item>> items = minioClient.listObjects(

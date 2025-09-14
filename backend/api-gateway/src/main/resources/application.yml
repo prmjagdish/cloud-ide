@@ -46,6 +46,13 @@ spring:
             - Path=/p/{projectId}/folder/**
           filters:
             - StripPrefix=0
+        # executort service
+        - id: executor-service
+          uri: http://executor-service:8083
+          predicates:
+            - Path=/api/run/**
+          filters:
+              - StripPrefix=0
 
 logging:
   level:
