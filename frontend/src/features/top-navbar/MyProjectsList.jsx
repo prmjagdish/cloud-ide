@@ -21,9 +21,18 @@ const MyProjectsList = () => {
     })();
   }, []);
 
+  const handleProjectClick = async (e, projectId) => {
+    e.preventDefault();
+    try {
+      await loadFolderStructure(projectId);
+    } catch (err) {
+      console.error("Failed to load folder structure for project:", projectId, err);
+    }
+  };
+
   if (loading) {
     return (
-      <DropdownMenuItem className="p-2 text-gray-400">
+      <DropdownMenuItem disabled>
         Loading...
       </DropdownMenuItem>
     );
@@ -31,28 +40,23 @@ const MyProjectsList = () => {
 
   if (projects.length === 0) {
     return (
-      <DropdownMenuItem className="p-2 text-gray-400">
+      <DropdownMenuItem disabled>
         No projects found
       </DropdownMenuItem>
     );
   }
-
 
   return (
     <>
       {projects.map((proj) => (
         <DropdownMenuItem
           key={proj.id}
-          onClick={(e) => {
-            e.preventDefault(); 
-            loadFolderStructure(proj.id);
-          }}
-          className="hover:bg-[#373737] hover:text-white focus:bg-[#373737] focus:text-white focus:outline-none p-2 cursor-pointer"
+          onSelect={(e) => handleProjectClick(e, proj.id)}           className="hover:bg-[#373737] hover:text-white focus:bg-[#373737] focus:text-white focus:outline-none p-2 cursor-pointer"
         >
           {proj.name}
         </DropdownMenuItem>
       ))}
-    </> 
+    </>
   );
 };
 

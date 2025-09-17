@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-// import { getFolderStructure } from "@/utils/apis/project";
+import { getFolderStructure } from "@/utils/apis/project";
 
 const FileExplorerContext = createContext();
 
@@ -8,17 +8,19 @@ export const FileExplorerProvider = ({ children }) => {
   const [folderData, setFolderData] = useState([]);
 
   const loadFolderStructure = async (projectId) => {
-    try {
-      console.log("loadfolder structure fun called", projectId);
-      setSelectedProject(projectId);
-      // const data = await getFolderStructure({ projectId });
-      // setFolderData(data);
-      // console.log("from context",data); 
-    } catch (err) {
-      console.error("Error fetching folder structure:", err);
-      setFolderData([]);
-    }   
-  };
+  console.log("Function called with projectId:", projectId);
+  try {
+    setSelectedProject(projectId);
+    console.log("State set, calling API...");
+    const data = await getFolderStructure({ projectId });
+    console.log("API returned:", data);
+    setFolderData(data);
+    console.log("State updated with folderData");
+  } catch (err) {
+    console.error("Error fetching folder structure:", err);
+  }
+};
+
 
   return (
     <FileExplorerContext.Provider
