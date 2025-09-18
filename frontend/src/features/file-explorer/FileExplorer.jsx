@@ -33,7 +33,7 @@ export default function FileExplorer() {
   if (!treeData || treeData.length === 0) {
     return (
       <div className="flex items-center justify-center p-4 text-gray-500">
-        <span>No files found. Select a project to view its structure.</span>
+        <span>No files found. Select a project.</span>
       </div>
     );
   }

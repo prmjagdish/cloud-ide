@@ -27,33 +27,20 @@ const CreateProjectMenu = ({ onOpenJavaModal }) => {
 
   return (
     <DropdownMenuSub>
-      <DropdownMenuSubTrigger className="flex items-center gap-2">
+      <DropdownMenuSubTrigger className="flex items-center gap-2 
+             data-[highlighted]:bg-[#333333] data-[highlighted]:text-white
+             data-[state=open]:bg-[#333333] data-[state=open]:text-white
+             transition-colors duration-200">
         <Plus className="w-4 h-4" /> Create Project
       </DropdownMenuSubTrigger>
 
       <DropdownMenuSubContent className="bg-[#252526] text-white border-gray-800">
         <DropdownMenuItem
-          className="flex items-center gap-2 hover:bg-[#373737] hover:text-white"
+          className="flex items-center gap-2 data-[highlighted]:bg-[#333333] data-[highlighted]:text-white"
           onSelect={handleSelect}
         >
           <FileCode className="w-4 h-4" /> Java Project
         </DropdownMenuItem>
-
-        {/*
-        // Alternate simple approach (uncomment if you prefer): render a plain button
-        // inside the dropdown content instead of using DropdownMenuItem.
-        <div className="px-2 py-1">
-          <button
-            onClick={() => {
-              console.log("button inside dropdown clicked");
-              onOpenJavaModal();
-            }}
-            className="w-full text-left flex items-center gap-2 px-2 py-1 rounded hover:bg-[#373737]"
-          >
-            <FileCode className="w-4 h-4" /> Java Project
-          </button>
-        </div>
-        */}
       </DropdownMenuSubContent>
     </DropdownMenuSub>
   );

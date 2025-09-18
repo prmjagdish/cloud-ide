@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { MoreVertical } from "lucide-react";
 import { getProjectsByUser } from "@/utils/apis/project";
 import { useFileExplorer } from "@/context/FileExplorerContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 const MyProjectsList = () => {
   const [projects, setProjects] = useState([]);
@@ -26,13 +32,21 @@ const MyProjectsList = () => {
     try {
       await loadFolderStructure(projectId);
     } catch (err) {
-      console.error("Failed to load folder structure for project:", projectId, err);
+      console.error("Failed to load folder structure:", projectId, err);
     }
+  };
+
+  const handleDelete = (projectId) => {
+    console.log("Delete project:", projectId);
+  };
+
+  const handleRename = (projectId) => {
+    console.log("Rename project:", projectId);
   };
 
   if (loading) {
     return (
-      <DropdownMenuItem disabled>
+      <DropdownMenuItem disabled className="text-gray-400 italic">
         Loading...
       </DropdownMenuItem>
     );
@@ -40,7 +54,7 @@ const MyProjectsList = () => {
 
   if (projects.length === 0) {
     return (
-      <DropdownMenuItem disabled>
+      <DropdownMenuItem disabled className="text-gray-400 italic">
         No projects found
       </DropdownMenuItem>
     );
@@ -49,12 +63,44 @@ const MyProjectsList = () => {
   return (
     <>
       {projects.map((proj) => (
-        <DropdownMenuItem
+        <div
           key={proj.id}
-          onSelect={(e) => handleProjectClick(e, proj.id)}           className="hover:bg-[#373737] hover:text-white focus:bg-[#373737] focus:text-white focus:outline-none p-2 cursor-pointer"
+          className="flex items-center justify-between px-3 py-1 rounded-md 
+          hover:bg-[#333333] hover:text-white transition-colors duration-200 cursor-pointer text-sm"
+          onClick={(e) => handleProjectClick(e, proj.id)}
         >
-          {proj.name}
-        </DropdownMenuItem>
+          <span className="truncate">{proj.name}</span>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="p-1.5 rounded-md hover:bg-[#444444] focus:outline-none transition-colors duration-200"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <MoreVertical size={16} />
+              </button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              side="right"
+              align="start"
+              className="bg-[#252526] text-white border border-gray-800 rounded-md shadow-lg"
+            >
+              <DropdownMenuItem
+                className="data-[highlighted]:bg-[#333333] data-[highlighted]:text-white text-sm"
+                onClick={() => handleRename(proj.id)}
+              >
+                Rename
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="data-[highlighted]:bg-[#333333] data-[highlighted]:text-red-400 text-sm"
+                onClick={() => handleDelete(proj.id)}
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       ))}
     </>
   );
