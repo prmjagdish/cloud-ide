@@ -9,12 +9,12 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>backend/auth-service</module>
-        <module>backend/file-service</module>
-        <module>backend/project-service</module>
-        <module>backend/api-gateway</module>
-        <module>backend/eureka-service</module>
-        <module>backend/executor-service</module>
+        <module>./auth-service</module>
+        <module>./file-service</module>
+        <module>./project-service</module>
+        <module>./api-gateway</module>
+        <module>./eureka-service</module>
+        <module>./executor-service</module>
     </modules>
 
     <properties>

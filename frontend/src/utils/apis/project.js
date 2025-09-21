@@ -47,3 +47,17 @@ export const getFolderStructure = async ({ projectId }) => {
     }
   }
 };
+
+//  @PutMapping("/{projectId}/rename")
+//     public ProjectResponse renameProject(@PathVariable UUID projectId,
+//                                          @RequestBody String newName,
+//                                          @RequestHeader("userId") UUID userId) {
+ export const renameProject = async ({newname, projectId}) => {
+  try {
+    const response = await apiClient.put(`/${projectId}/rename`,newname
+    )
+    return response.data;
+  } catch (error) {
+    console.log("project rename error:",error)
+  }
+ }
