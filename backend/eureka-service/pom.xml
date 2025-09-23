@@ -16,28 +16,27 @@
     <name>eureka-service</name>
     <description>Eureka service for cloud IDE</description>
 
+    <!-- ✅ Force this to build a runnable jar -->
+    <packaging>jar</packaging>
+
     <dependencies>
-        <!-- Eureka Server dependency (version inherited from parent BOM) -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
 
-        <!-- Optional: Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -46,7 +45,6 @@
 
     <build>
         <plugins>
-            <!-- Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -61,10 +59,17 @@
                 </configuration>
             </plugin>
 
-            <!-- Spring Boot Plugin -->
+            <!-- ✅ Ensure fat jar with Main-Class is created -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <excludes>
                         <exclude>
